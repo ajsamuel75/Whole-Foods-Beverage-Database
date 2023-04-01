@@ -1,0 +1,386 @@
+/* Showing results for Beverages.xlsx */
+DROP TABLE IF EXISTS Beverages;
+
+/* CREATE TABLE */
+CREATE TABLE Beverages(
+product_id VARCHAR(50)  NOT NULL PRIMARY KEY,
+product_name VARCHAR(100),
+Category_ VARCHAR(50),
+Subcategory VARCHAR(50),
+sub_category_id VARCHAR(50),
+date_data_retrieval DATE,
+vegan TINYINT,
+gluten_free TINYINT,
+keto_friendly TINYINT,
+vegetarian TINYINT,
+organic TINYINT,
+dairy_free TINYINT,
+sugar_conscious TINYINT,
+paleo_friendly TINYINT,
+whole_foods_diet TINYINT,
+low_sodium TINYINT,
+kosher TINYINT,
+low_fat TINYINT,
+engine_2 TINYINT,
+regular_price_cents DOUBLE,
+calories_per_serving VARCHAR(20),
+serving_size DOUBLE,
+serving_units DOUBLE,
+total_size DOUBLE,
+total_size_unit VARCHAR(20),
+total_secondary_size DOUBLE,
+total_secondary_size_unit VARCHAR(20)
+);
+
+/* INSERT QUERY NO: 1 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be1', 'Kids Super Fruit Punch', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 549, 40, 1, 8, 6.75, 'fl oz', 200, 'g'
+);
+
+/* INSERT QUERY NO: 2 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be2', 'Organic Rooibos Tea', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 799, 0, 1, 18, 1.52, 'oz', 45, 'g'
+);
+
+/* INSERT QUERY NO: 3 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be3', 'Peach Yerba Mate', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 349, 30, 8, 2, 16, 'fl oz', 472, 'g'
+);
+
+/* INSERT QUERY NO: 4 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be4', 'Calamansi Lime Nectar', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 529, 120, 8, 8, 64, 'fl oz', 1887, 'g'
+);
+
+/* INSERT QUERY NO: 5 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be5', 'Organic Chocolate Coconut Smoothie', 'Beverages', 'Water Seltzer & Sparkling Water', 'bev_wa', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 399, 120, 10, 1, 10, 'fl oz', 295, 'g'
+);
+
+/* INSERT QUERY NO: 6 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be6', 'Ginger Lemongrass Kombucha', 'Beverages', 'Kombucha & Tea', 'bev_kom', '2022/11/22', 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 419, 30, 2, 8, 16, 'fl oz', 472, 'g'
+);
+
+/* INSERT QUERY NO: 7 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be7', 'Vanilla 6x4 Pack Vanilla', 'Beverages', 'Coffee', 'bev_cof', '2022/11/22', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1199, 100, 9, 4, 36, 'fl oz', 1062, 'g'
+);
+
+/* INSERT QUERY NO: 8 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be8', 'Organic Citrus Ginger Zest', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 549, 180, 15.2, 1, 15.2, 'fl oz', 449, 'g'
+);
+
+/* INSERT QUERY NO: 9 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be9', 'Verve Seabright House Blend Whole Bean Coffee', 'Beverages', 'Coffee', 'bev_cof', '2022/11/22', 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1579, 2.4, 8, 1.5, 12, 'oz', 354, 'g'
+);
+
+/* INSERT QUERY NO: 10 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be10', 'ZenWTR Alkaline Water', 'Beverages', 'Water Seltzer & Sparkling Water', 'bev_wa', '2022/11/22', 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 179, 0, 12, 1.975, 23.7, 'fl oz', 699, 'g'
+);
+
+/* INSERT QUERY NO: 11 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be11', 'Kombucha Ginger Lime', 'Beverages', 'Kombucha & Tea', 'bev_kom', '2022/11/22', 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 419, 30, 8, 1.5, 12, 'fl oz', 354, 'g'
+);
+
+/* INSERT QUERY NO: 12 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be12', 'Kombucha Lvndr Can Org', 'Beverages', 'Kombucha & Tea', 'bev_kom', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 369, 45, 12, 1, 12, 'fl oz', 354, 'g'
+);
+
+/* INSERT QUERY NO: 13 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be13', 'Volcano Lime Burst', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 249, 0, 6.7, 1, 6.7, 'fl oz', 198, 'g'
+);
+
+/* INSERT QUERY NO: 14 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be14', 'Organic Hundred Mile Blend Coffee', 'Beverages', 'Coffee', 'bev_cof', '2022/11/22', 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1699, 0, 0.5, 24, 12, 'oz', 354, 'g'
+);
+
+/* INSERT QUERY NO: 15 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be15', 'Chocolate Non-dairy Beverage', 'Beverages', 'Sports Energy & Nutritional Drinks', 'bev_spo', '2022/11/22', 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 579, 140, 8, 6, 48, 'fl oz', 1416, 'g'
+);
+
+/* INSERT QUERY NO: 16 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be16', 'Organic Original', 'Beverages', 'Kombucha & Tea', 'bev_kom', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 429, 60, 16.2, 1, 16.2, 'oz', 478, 'g'
+);
+
+/* INSERT QUERY NO: 17 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be17', 'Masala Chai Tea Concentrate', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 699, 80, 8, 4, 32, 'fl oz', 944, 'g'
+);
+
+/* INSERT QUERY NO: 18 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be18', 'Organic Grapefruit Soda', 'Beverages', 'Soft Drinks', 'bev_sof', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 449, 140, 11.2, 4, 44.8, 'fl oz', 1321, 'g'
+);
+
+/* INSERT QUERY NO: 19 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be19', 'Organic Lemon Balm Tea', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 699, 0, 1, 16, 0.85, 'oz', 26, 'g'
+);
+
+/* INSERT QUERY NO: 20 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be20', 'Decaffeinated Breakfast Tea', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 839, 0, 1, 50, 4.41, 'oz', 131, 'g'
+);
+
+/* INSERT QUERY NO: 21 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be21', 'Original Tulsi Holy Basil Tea', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 629, 0, 1, 18, 1.14, 'oz', 34, 'g'
+);
+
+/* INSERT QUERY NO: 22 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be22', 'Tea Loose Purple Jasmine Tins', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1199, 0, 1, 40, 3.2, 'oz', 95, 'g'
+);
+
+/* INSERT QUERY NO: 23 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be23', 'Caffeine Free Chamomile Tea', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 479, 0, 1, 20, 0.9, 'oz', 27, 'g'
+);
+
+/* INSERT QUERY NO: 24 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be24', 'Pomegranate Liquid Energy', 'Beverages', 'Sports Energy & Nutritional Drinks', 'bev_spo', '2022/11/22', 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 249, 25, 1, 1, 2, 'fl oz', 59, 'g'
+);
+
+/* INSERT QUERY NO: 25 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be25', 'Honest Organic Berry Good Lemonade Juice Boxes ', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 549, 40, 1, 8, 1600, 'ml', 47174, 'g'
+);
+
+/* INSERT QUERY NO: 26 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be26', 'Mango Juice', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 449, 120, 8, 4, 33.8, 'fl oz', 997, 'g'
+);
+
+/* INSERT QUERY NO: 27 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be27', 'Volcanic Water', 'Beverages', 'Water Seltzer & Sparkling Water', 'bev_wa', '2022/11/22', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 299, 0, 8.5, 4.0, 33.8, 'oz', 997, 'g'
+);
+
+/* INSERT QUERY NO: 28 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be28', 'Root Beer', 'Beverages', 'Soft Drinks', 'bev_sof', '2022/11/22', 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 799, 160, 12, 4, 48, 'oz', 1416, 'g'
+);
+
+/* INSERT QUERY NO: 29 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be29', 'Breath Deep', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 529, 0, 1, 16, 1.12, 'oz', 34, 'g'
+);
+
+/* INSERT QUERY NO: 30 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be30', 'Organic Ground Coffee in Bag Vienna Roast - Pacific Rim', 'Beverages', 'Soft Drinks', 'bev_sof', '2022/11/22', 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1049, 0, 0.5, 48, 24, 'oz', 708, 'g'
+);
+
+/* INSERT QUERY NO: 31 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be31', 'Organic Apple Juice Boxes', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 549, 100, 6.8, 4.0, 27, 'oz', 797, 'g'
+);
+
+/* INSERT QUERY NO: 32 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be32', 'Tepache Tradicional Pineapple Spice', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 329, 45, 12, 1, 12, 'oz', 354, 'g'
+);
+
+/* INSERT QUERY NO: 33 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be33', 'Green Tea Blueberry Slim Life', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 529, 0, 1, 16, 1.12, 'oz', 34, 'g'
+);
+
+/* INSERT QUERY NO: 34 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be34', 'Wild Sweet Orange Tea', 'Beverages', 'Tea ', 'bev_tea', '2022/11/22', 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 449, 0, 1, 20, 1.58, 'oz', 47, 'g'
+);
+
+/* INSERT QUERY NO: 35 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be35', 'Brew Organic Mocha Coffee Cold Brew', 'Beverages', 'Coffee', 'bev_cof', '2022/11/22', 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1049, 15, 8, 4, 32, 'fl oz', 944, 'g'
+);
+
+/* INSERT QUERY NO: 36 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be36', 'Pink Lady Apple Kombucha', 'Beverages', 'Kombucha & Tea', 'bev_kom', '2022/11/22', 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 949, 60, 12, 4, 48, 'fl oz', 1416, 'g'
+);
+
+/* INSERT QUERY NO: 37 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be37', 'Naked Green Machine Smoothie', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 349, 270, 15.2, 1, 15.2, 'fl oz', 449, 'g'
+);
+
+/* INSERT QUERY NO: 38 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be38', 'Organic Nile Chamomile', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, 1, 15, 0.8, 'oz', 24, 'g'
+);
+
+/* INSERT QUERY NO: 39 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be39', 'Organic Guava Passionfruit Energy Drink', 'Beverages', 'Sports Energy & Nutritional Drinks', 'bev_spo', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 249, 60, 12, 1, 12, 'fl oz', 354, 'g'
+);
+
+/* INSERT QUERY NO: 40 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be40', 'Ginger Root Beer Zero Calorie Soda', 'Beverages', 'Soft Drinks', 'bev_sof', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 999, 0, 12, 10, 120, 'fl oz', 3539, 'g'
+);
+
+/* INSERT QUERY NO: 41 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be41', 'Organic Pure Carrot Juice 32 fl oz', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 899, 90, 8, 4, 32, 'fl oz', 944, 'g'
+);
+
+/* INSERT QUERY NO: 42 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be42', 'Organic Wtg Holiday Chai', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1299, 0, 1, 36, 1.8, 'oz', 54, 'g'
+);
+
+/* INSERT QUERY NO: 43 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be43', 'Organic Tropical Uprising Yerba Mate', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 349, 60, 485, 1, 15.5, 'fl oz', 457, 'g'
+);
+
+/* INSERT QUERY NO: 44 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be44', 'Mountain Spring Water', 'Beverages', 'Water Seltzer & Sparkling Water', 'bev_wa', '2022/11/22', 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1749, 0, 16.9, 12, 202.8, 'oz', 5980, 'g'
+);
+
+/* INSERT QUERY NO: 45 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be45', 'Organic Instant Coffee', 'Beverages', 'Coffee', 'bev_cof', '2022/11/22', 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1429, 0, 1, 1, 3.53, 'oz', 105, 'g'
+);
+
+/* INSERT QUERY NO: 46 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be46', 'Organic Matcha Powder', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1499, 10, 1, 70, 5, 'oz', 148, 'g'
+);
+
+/* INSERT QUERY NO: 47 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be47', 'Organic Green Tea', 'Beverages', 'Tea', 'bev_tea', '2022/11/22', 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 319, 0, 1, 70, 4.9, 'oz', 145, 'g'
+);
+
+/* INSERT QUERY NO: 48 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be48', '100% Orange Juice No Pulp (Not From Concentrate)', 'Beverages', 'Juice', 'bev_jui', '2022/11/22', 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 429, 110, 8, 7, 59, 'oz', 1740, 'g'
+);
+
+/* INSERT QUERY NO: 49 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be49', 'Unsweetened Medium Roast Iced Coffee', 'Beverages', 'Coffee', 'bev_cof', '2022/11/22', 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 599, 15, 12, 4, 48, 'fl oz', 1416, 'g'
+);
+
+/* INSERT QUERY NO: 50 */
+INSERT INTO Beverages(product_id, product_name, Category_, Subcategory, sub_category_id, date_data_retrieval, vegan, gluten_free, keto_friendly, vegetarian, organic, dairy_free, sugar_conscious, paleo_friendly, whole_foods_diet, low_sodium, kosher, low_fat, engine_2, regular_price_cents, calories_per_serving, serving_size, serving_units, total_size, total_size_unit, total_secondary_size, total_secondary_size_unit)
+VALUES
+(
+'be50', 'Lemon Sparkling Water', 'Beverages', 'Water Seltzer & Sparkling Water', 'bev_wa', '2022/11/22', 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 649, 3, 1, 8, 8, 'fl oz', 236, 'g'
+);
+
+SELECT *
+FROM Beverages;

@@ -1,0 +1,611 @@
+USE ddmban_sql_analysis;
+
+SELECT 
+    *
+FROM
+    ddmban_data;-- Calling all entries from database
+
+SELECT 
+    *
+FROM
+    ddmban_data
+ORDER BY price DESC;-- Calling all entries from database soted by price from highest to lowest
+
+SELECT 
+    MAX(price)
+FROM
+    ddmban_data;-- The highest price point in the database
+
+
+SELECT 
+    STDDEV(price)
+FROM
+    ddmban_data;-- Finding the level of deviation in the price data points
+
+
+SELECT 
+    *
+FROM
+    ddmban_data
+WHERE
+    vegan = '1' AND glutenfree = '1'
+        AND ketofriendly = '1'
+        AND vegetarian = '1'
+        AND organic = '1'
+        AND dairyfree = '1'
+        AND sugarconscious = '1'
+        AND paleofriendly = '1'
+        AND wholefoodsdiet = '1'
+        AND lowsodium = '1'
+        AND kosher = '1'
+        AND lowfat = '1'
+        AND engine2 = '1';-- Calling products that have all options (In this case, only product ID 213 was pullled)
+    
+    
+SELECT 
+    category,
+    COUNT(product),
+    AVG(servingsize) AS avg_serving_size,
+    AVG(price) AS avg_price
+FROM
+    ddmban_data
+WHERE
+    vegan = '0' AND glutenfree = '0'
+        AND ketofriendly = '0'
+        AND vegetarian = '0'
+        AND organic = '0'
+        AND dairyfree = '0'
+        AND sugarconscious = '0'
+        AND paleofriendly = '0'
+        AND wholefoodsdiet = '0'
+        AND lowsodium = '0'
+        AND kosher = '0'
+        AND lowfat = '0'
+        AND engine2 = '0'
+GROUP BY category
+ORDER BY avg_price DESC
+;-- -- Calling products that have none of the options in groups of category and sorted by the average proce of each category
+    
+    
+SELECT 
+    *, caloriesperserving / servingsize AS calory_per_gram
+FROM
+    (SELECT 
+        *,
+            CASE
+                WHEN category = 'NULL' THEN 'Snacks'
+                ELSE category
+            END AS corrected_category,
+            CASE
+                WHEN category IN ('NULL' , 'Beer', 'Wine') THEN price * 100
+                ELSE price
+            END AS corrected_price,
+            CASE
+                WHEN servingsizeunits = 'lb' THEN servingsize * 454
+                WHEN servingsizeunits = 'ml' THEN servingsize * 1
+                WHEN servingsizeunits = 'grams' THEN servingsize
+                WHEN servingsizeunits = 'oz' THEN servingsize * 28.4
+                WHEN totalsizeunits = 'fl oz' THEN servingsize * 28.4
+                WHEN totalsizeunits = 'oz' THEN servingsize * 28.4
+                WHEN
+                    totalsizeunits = 'NULL'
+                        AND category = 'NULL'
+                THEN
+                    servingsize
+                WHEN servingsizeunits = 'g' THEN servingsize
+                WHEN
+                    totalsizeunits = 'NULL'
+                        AND category = 'Beer'
+                THEN
+                    servingsize * 28.4
+                WHEN
+                    totalsizeunits = 'NULL'
+                        AND category = 'Wine'
+                THEN
+                    5 * 28.4
+                WHEN servingsizeunits = 'unit' THEN servingsize
+            END AS Corrected_serving_size
+    FROM
+        ddmban_data) AS SUB_QUERY;-- Corrected dadta entries by merging and correcting units while correcting certain unnamed categories
+    
+         
+SELECT 
+    category,
+    subcategory,
+    ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS organic_Corr, -- calling category, subcategory and a formula for finding correlation between dietary prefernce and price for each subcategory
+            
+-- grouping the correlation results by levels of correlation ranging from -1 to 1 ( -1 being Perfect Inverse correlation and 1 being Perfect correlation)
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation' 
+        WHEN
+            (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(organic * price) - SUM(organic) * SUM(price)) / (SQRT(COUNT(*) * SUM(organic * organic) - SUM(organic) * SUM(organic)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS organic_correlation_check, -- grouping the correlation results by levels of correlation ranging from -1 to 1 ( -1 being Perfect Inverse correlation and 1 being Perfect correlation)
+    
+    ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS lowsodium_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowsodium * price) - SUM(lowsodium) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowsodium * lowsodium) - SUM(lowsodium) * SUM(lowsodium)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS lowsodium_correlation_check,
+    ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS vegan_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(vegan * price) - SUM(vegan) * SUM(price)) / (SQRT(COUNT(*) * SUM(vegan * vegan) - SUM(vegan) * SUM(vegan)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS vegan_correlation_check,
+    ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS lowfat_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(lowfat * price) - SUM(lowfat) * SUM(price)) / (SQRT(COUNT(*) * SUM(lowfat * lowfat) - SUM(lowfat) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS lowfat_correlation_check,
+    ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS ketofriendly_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(ketofriendly * price) - SUM(ketofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(ketofriendly * ketofriendly) - SUM(ketofriendly) * SUM(lowfat)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS ketofriendly_correlation_check,
+    ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS kosher_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(kosher * price) - SUM(kosher) * SUM(price)) / (SQRT(COUNT(*) * SUM(kosher * kosher) - SUM(kosher) * SUM(kosher)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS kosher_correlation_check,
+    ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS paleofriendly_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(paleofriendly * price) - SUM(paleofriendly) * SUM(price)) / (SQRT(COUNT(*) * SUM(paleofriendly * paleofriendly) - SUM(paleofriendly) * SUM(paleofriendly)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS paleofriendly_correlation_check,
+    ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS engine2_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(engine2 * price) - SUM(engine2) * SUM(price)) / (SQRT(COUNT(*) * SUM(engine2 * engine2) - SUM(engine2) * SUM(engine2)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS engine2_correlation_check,
+    ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS caloriesperserving_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(caloriesperserving * price) - SUM(caloriesperserving) * SUM(price)) / (SQRT(COUNT(*) * SUM(caloriesperserving * caloriesperserving) - SUM(caloriesperserving) * SUM(caloriesperserving)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS caloriesperserving_correlation_check,
+    ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+            2) AS dairyfree_Corr,
+    CASE
+        WHEN
+            (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = - 1
+        THEN
+            'Perfect Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.5
+                AND (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.99
+        THEN
+            'High Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= - 0.01
+                AND (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= - 0.49
+        THEN
+            'Low Inverse Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 0
+        THEN
+            'No Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.01
+                AND (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.49
+        THEN
+            'Low Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) >= 0.5
+                AND (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) <= 0.99
+        THEN
+            'High Correlation'
+        WHEN
+            (ROUND((COUNT(*) * SUM(dairyfree * price) - SUM(dairyfree) * SUM(price)) / (SQRT(COUNT(*) * SUM(dairyfree * dairyfree) - SUM(dairyfree) * SUM(dairyfree)) * SQRT(COUNT(*) * SUM(price * price) - SUM(price) * SUM(price))),
+                    2)) = 1
+        THEN
+            'Perfect Correlation'
+        ELSE 'NULL'
+    END AS dairyfree_correlation_check,
+    
+    CASE
+        WHEN COUNT(subcategory) <= 2 THEN 'Insufficient data points for correlation'
+        ELSE 'Optimal Data points for correlation'
+    END AS Number_of_data_points -- new column verifying the amount of data points used in correlation
+FROM
+    ddmban_data
+WHERE
+    price != 0 AND category IS NOT NULL -- removing all zeroes and Nulls from price and categories
+        AND (SELECT 
+            COUNT(subcategory)
+        FROM
+            ddmban_data) > 1
+GROUP BY category , subcategory;
